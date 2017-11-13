@@ -1,0 +1,81 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Bench Simulator 2016</title>
+		
+		<link rel="stylesheet" href="css/main.css">
+	</head>
+	<body>
+		<div class="nodisplay">
+			<img id="img_player" src="img/bench.png"/>
+			<img id="img_man" src="img/newman.png"/>
+			<img id="img_bad" src="img/newbad.png"/>
+			<img id="img_bird_left" src="img/birdleft.png"/>
+			<img id="img_bird_right" src="img/birdright.png"/>
+			<img id="img_egg" src="img/egg.png"/>
+			<img id="img_hp" src="img/hpegg.png"/>
+			<img id="img_nade" src="img/eggnade.png"/>
+			<img id="img_boom" src="img/colorboom.png"/>
+			<!-- hard mode images -->
+			<img id="img_player_hard" src="img/ibench.png"/>
+			<img id="img_man_hard" src="img/squid.png"/>
+			<img id="img_bad_hard" src="img/robot.png"/>
+			<img id="img_bird_left_hard" src="img/evilbirdleft.png"/>
+			<img id="img_bird_right_hard" src="img/evilbirdright.png"/>
+		</div>
+		
+		<div id="splash">
+			<h1>Bench Simulator 2016</h1>
+			<h3>By Robert Brestle</h3>
+			<h2>Directions:</h2>
+			<p>Use the mouse/press + drag to move.</p>
+			<p>Press P to pause the game.</p>
+			<p>If your health reaches 0, you lose!</p>
+			<h2>Collect:</h2>
+			<div class="direction_images normalmode">
+				<img src="img/newman.png"/>
+				<img src="img/hpegg.png"/>
+			</div>
+			<div class="direction_images hardmode" style='display: none;'>
+				<img src="img/squid.png"/>
+				<img src="img/hpegg.png"/>
+			</div>
+			<h2>Avoid:</h2>
+			<div class="direction_images normalmode">
+				<img src="img/newbad.png"/>
+				<img src="img/birdright.png"/>
+				<img src="img/egg.png"/>
+				<img src="img/eggnade.png"/>
+				<img src="img/colorboom.png"/>
+			</div>
+			<div class="direction_images hardmode" style='display: none;'>
+				<img src="img/robot.png"/>
+				<img src="img/evilbirdright.png"/>
+				<img src="img/egg.png"/>
+				<img src="img/eggnade.png"/>
+				<img src="img/colorboom.png"/>
+			</div>
+			
+			
+			<p class="no_selection">
+				<input id="hard_mode_toggle" type="checkbox" />
+				<label for="hard_mode_toggle">HELL MODE</label>
+			</p>
+			<p class="no_selection">
+				<input id="sound_toggle" type="checkbox" />
+				<label for="sound_toggle">SOUND</label>
+			</p>
+			
+			<button type="button" id="start">START</button>
+		</div>
+		
+		<button id="back" class="nodisplay" type="button">Back to Menu</button>
+		
+		<canvas id="stage" width="1" height="1"></canvas>
+		<script type="text/javascript" src="js/Globals.js"></script>
+		<script type="text/javascript" src="js/Game.js"></script>
+		<script type="text/javascript">
+			init();
+		</script>
+	</body>
+</html>
