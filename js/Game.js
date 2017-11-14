@@ -60,7 +60,7 @@ function init() {
 					gamestarted = false;
 					canvas.width = 0;
 					canvas.height = 0;
-					document.getElementById('stage').className = '';
+					document.getElementById('canvas').className = '';
 					document.getElementById('splash').className = '';
 					document.getElementById('back').className = 'nodisplay';
 				}
@@ -164,7 +164,7 @@ function initGame() {
 	paused = false;
 	
 	// init canvas and context
-	canvas = document.getElementById('stage');
+	canvas = document.getElementById('canvas');
 	// check if canvas is supported
 	if(!canvas.getContext) {
 		alert("Your browser does not support HTML5 Canvas :(");
@@ -561,22 +561,26 @@ function collision() {
 
 // -------------------------------------
 function draw() {
-	//ctx.clearRect(0, 0, canvas.width, canvas.height);
-	ctx.drawImage(canvas.background, 0, 0, canvas.width, canvas.height);
+	// pre-rendering
+	var p_cvs = document.createElement('canvas');
+	var p_ctx = p_cvs.getContext('2d');
 	
-	ctx.drawImage(player.img, (player.x - player.sizeX/2 - 1), (player.y - player.sizeY/2));
+	//ctx.clearRect(0, 0, canvas.width, canvas.height);
+	p_ctx.drawImage(canvas.background, 0, 0, canvas.width, canvas.height);
+	
+	p_ctx.drawImage(player.img, (player.x - player.sizeX/2 - 1), (player.y - player.sizeY/2));
 	
 	for(var i = 0; i < enemies.length; i++) {
-		ctx.drawImage(eval(enemies[i].img), enemies[i].x, enemies[i].y, enemies[i].sizeX, enemies[i].sizeY);
+		p_ctx.drawImage(eval(enemies[i].img), enemies[i].x, enemies[i].y, enemies[i].sizeX, enemies[i].sizeY);
 		//ctx.strokeRect(enemies[i].x, enemies[i].y, enemies[i].sizeX, enemies[i].sizeY);
 	}
 	
 	for(var i = 0; i < eggies.length; i++) {
-		ctx.drawImage(eval(eggies[i].img), eggies[i].x, eggies[i].y, eggies[i].sizeX, eggies[i].sizeY);
+		p_ctx.drawImage(eval(eggies[i].img), eggies[i].x, eggies[i].y, eggies[i].sizeX, eggies[i].sizeY);
 	}
 	
 	for(var i = 0; i < explosions.length; i++) {
-		ctx.drawImage(colorboom, explosions[i].x, explosions[i].y, explosions[i].sizeX, explosions[i].sizeY);
+		p_ctx.drawImage(colorboom, explosions[i].x, explosions[i].y, explosions[i].sizeX, explosions[i].sizeY);
 		//ctx.strokeRect(explosions[i].x, explosions[i].y, explosions[i].sizeX, explosions[i].sizeY);
 	}
 	
@@ -586,10 +590,12 @@ function draw() {
 	//ctx.fillStyle = "#FF0000";
 	//ctx.fill();
 	//ctx.closePath();
-	ctx.font = "24px Verdana";
-	ctx.textAlign = 'left';
-	ctx.strokeText(player.health + '/' + player.maxHealth, 20, 40);
-	ctx.strokeText('Score: ' + player.points, 20, 80);
+	p_ctx.font = "24px Verdana";
+	p_ctx.textAlign = 'left';
+	p_ctx.strokeText(player.health + '/' + player.maxHealth, 20, 40);
+	p_ctx.strokeText('Score: ' + player.points, 20, 80);
+	
+	ctx.drawImage(p_cvs, 0, 0);
 }
 function renderStart() {
 	ctx.fillStyle = 'red';
@@ -634,7 +640,7 @@ function renderGameOver() {
 	back.className = '';
 	back.style = 'margin-left: -' + back.clientWidth/2 + 'px;';
 	
-	document.getElementById('stage').className = 'gameover';
+	document.getElementById('canvas').className = 'gameover';
 }
 
 function levels() {
