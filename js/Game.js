@@ -563,6 +563,8 @@ function collision() {
 function draw() {
 	// pre-rendering
 	var p_cvs = document.createElement('canvas');
+	p_cvs.width = canvas.width;
+	p_cvs.height = canvas.height;
 	var p_ctx = p_cvs.getContext('2d');
 	
 	//ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -595,7 +597,7 @@ function draw() {
 	p_ctx.strokeText(player.health + '/' + player.maxHealth, 20, 40);
 	p_ctx.strokeText('Score: ' + player.points, 20, 80);
 	
-	ctx.drawImage(p_cvs, 0, 0);
+	ctx.drawImage(p_cvs, 0, 0, canvas.width, canvas.height);
 }
 function renderStart() {
 	ctx.fillStyle = 'red';

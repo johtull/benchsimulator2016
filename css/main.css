@@ -34,14 +34,14 @@ button#back {
 	left: 50%;
 	margin-top: 72px;
 }
-#stage {
+#canvas {
 	z-index: 1;
 	background: #e5e5e5;
 }
-#stage:hover {
+#canvas:hover {
 	cursor: none;
 }
-#stage.gameover:hover {
+#canvas.gameover:hover {
 	cursor: default;
 }
 .nodisplay {
