@@ -1,4 +1,3 @@
-// johtull.com/bench
 //https://developer.mozilla.org/en-US/docs/Web/API/Detecting_device_orientation
 
 // TODO:
@@ -83,6 +82,8 @@ function init() {
 			if(e.clientX > 0 && e.clientX < canvas.width && e.clientY > 0 && e.clientY < canvas.height) {
 				player.x = e.clientX;
 				player.y = e.clientY;
+				//player.mx = 0;
+				//player.my = 0;
 			}
 		}
 	}, false);
@@ -90,18 +91,20 @@ function init() {
 	document.addEventListener("keydown", function(e) {
 		//wasd = 87, 65, 83, 68
 		switch(e.keyCode) {
+			/*
 			case 87:
-				player.my = -2;
+				player.my = -4;
 				break;
 			case 83:
-				player.my = 2;
+				player.my = 4;
 				break;
 			case 65:
-				player.mx = -2;
+				player.mx = -4;
 				break;
 			case 68:
-				player.mx = 2;
+				player.mx = 4;
 				break;
+			*/
 			case 77:
 				soundEnabled = !soundEnabled;
 				break;
@@ -133,6 +136,25 @@ function init() {
 				break;
 		}
 	}, false);
+	/*
+	document.addEventListener("keyup", function(e) {
+		//wasd = 87, 65, 83, 68
+		switch(e.keyCode) {
+			case 87:
+				player.my = 0;
+				break;
+			case 83:
+				player.my = 0;
+				break;
+			case 65:
+				player.mx = 0;
+				break;
+			case 68:
+				player.mx = 0;
+				break;
+		}
+	}, false);
+	*/
 	/* LISTENERS */
 }//init
 
@@ -178,56 +200,59 @@ function initGame() {
 	
 	//goFullScreen(canvas);
 	
+	
+	
+	refreshCanvasSize();
+		
+	canvas.background = new Image();
+	if(hard) {
+		canvas.background.src = 'img/hardmode.png';
+		
+		//	grab graphics from DOM
+		player.img = document.getElementById("img_player_hard");
+	
+		man = document.getElementById("img_man_hard");
+		purple = document.getElementById("img_bad_hard");
+		birdL = document.getElementById("img_bird_left_hard");
+		birdR = document.getElementById("img_bird_right_hard");
+	}else {
+		canvas.background.src = 'img/game.png';
+		
+		//	grab graphics from DOM
+		player.img = document.getElementById("img_player");
+		
+		man = document.getElementById("img_man");
+		purple = document.getElementById("img_bad");
+		birdL = document.getElementById("img_bird_left");
+		birdR = document.getElementById("img_bird_right");
+	}
+	
+	// reset arrays
+	enemies = [];
+	eggies = [];
+	explosions = [];
+	
+	// reset player
+	player.x = canvas.width/2;
+	player.y = canvas.height/2;
+	player.points = 0;
+	if(hard) {
+		player.maxHealth = 20;
+	}else {
+		player.maxHealth = 10;
+	}
+	player.health = player.maxHealth;
+	
+	
+	//	init first 10 enemies
+	for(var i = 0; i < 10; i++) {
+		addEnemy();
+	}
+	
+	renderStart();
+	
+	// pause 2 seconds before starting
 	setTimeout(function() {
-		
-		refreshCanvasSize();
-		
-		canvas.background = new Image();
-		if(hard) {
-			canvas.background.src = 'img/hardmode.png';
-			
-			//	grab graphics from DOM
-			player.img = document.getElementById("img_player_hard");
-		
-			man = document.getElementById("img_man_hard");
-			purple = document.getElementById("img_bad_hard");
-			birdL = document.getElementById("img_bird_left_hard");
-			birdR = document.getElementById("img_bird_right_hard");
-		}else {
-			canvas.background.src = 'img/game.png';
-			
-			//	grab graphics from DOM
-			player.img = document.getElementById("img_player");
-			
-			man = document.getElementById("img_man");
-			purple = document.getElementById("img_bad");
-			birdL = document.getElementById("img_bird_left");
-			birdR = document.getElementById("img_bird_right");
-		}
-		
-		// reset arrays
-		enemies = [];
-		eggies = [];
-		explosions = [];
-		
-		// reset player
-		player.x = canvas.width/2;
-		player.y = canvas.height/2;
-		player.points = 0;
-		if(hard) {
-			player.maxHealth = 20;
-		}else {
-			player.maxHealth = 10;
-		}
-		player.health = player.maxHealth;
-		
-		
-		//	init first 10 enemies
-		for(var i = 0; i < 10; i++) {
-			addEnemy();
-		}
-		
-		// start game
 		main();
 	}, 2000);
 }
@@ -363,7 +388,6 @@ function addEgg(bX, bY, mY) {
 			case 2:
 				egg.type = 'eggnade';
 				egg.img = 'eggnade';
-				//egg.delay = Math.floor((Math.random() * (canvas.height - (bY * 2))) + 32);
 				egg.delay = Math.floor((Math.random() * (canvas.height/egg.my) - 32) + 32);
 				break;
 			case 0:
@@ -465,7 +489,9 @@ function collision() {
 			   if(eggies[i].type == 'egghp') {
 				    if(player.health < player.maxHealth) {
 						player.health++;
-				    }
+				    }else {
+						player.points++;
+					}
 			   }else {
 				   player.health--;
 				   if(soundEnabled)
@@ -564,11 +590,21 @@ function draw() {
 	ctx.textAlign = 'left';
 	ctx.strokeText(player.health + '/' + player.maxHealth, 20, 40);
 	ctx.strokeText('Score: ' + player.points, 20, 80);
-	
-	//ctx.strokeText(enemies.length, 50, 40);
-	
 }
-
+function renderStart() {
+	ctx.fillStyle = 'red';
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+	ctx.stroke();
+	
+	ctx.fillStyle = 'black';
+	ctx.font = "48px Verdana";
+	ctx.textAlign = 'center';
+	if(hard) {
+		ctx.fillText('This won\'t be easy...', canvas.width/2, canvas.height/2);
+	}else {
+		ctx.fillText('Get Ready!', canvas.width/2, canvas.height/2);
+	}
+}
 function renderPauseBox() {
 	ctx.fillStyle = 'black';
 	ctx.fillRect(canvas.width/4, canvas.height/4, canvas.width/2, canvas.height/2);
@@ -603,8 +639,13 @@ function renderGameOver() {
 
 function levels() {
 	// more than 50 uses too much CPU - find a way around this?
-	if(player.points % 10 == 0 && enemies.length < 500) {
-		addEnemy();
-		player.points++;
+	if(enemies.length < 500) {
+		if(!hard && player.points % 10 == 0) {
+			addEnemy();
+			player.points++;
+		}else if(hard && player.points % 5 == 0) {
+			addEnemy();
+			player.points++;
+		}
 	}
 }
